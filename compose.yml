@@ -1,0 +1,18 @@
+services:
+  front:
+    container_name: test_react
+    build: .
+    volumes:
+      - ./front:/front
+      - /front/node_modules
+    ports:
+      - "5173:5173"
+    environment:
+      - NODE_ENV=development
+      - VITE_API_URL=http://localhost:8080
+    restart: always
+    networks:
+      - app
+
+networks: 
+  app:
