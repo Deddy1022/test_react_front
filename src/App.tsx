@@ -3,7 +3,7 @@ import { router } from "./routes/routes"
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { CookiesProvider } from "react-cookie";
 import { NotificationProvider } from "./hooks/NotificationContext";
-import { NotificationSystem } from "./components/shared/notification";
+import { NotificationSystem } from "./components/shared/Notification";
 
 function App() {
   const client = new QueryClient();

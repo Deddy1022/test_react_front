@@ -1,0 +1,55 @@
+services:
+  front:
+    container_name: test_react
+    build: 
+      context: ./front
+      dockerfile: Dockerfile
+    volumes:
+      - ./front:/front
+      - /front/node_modules
+    ports:
+      - "5173:5173"
+    environment:
+      - NODE_ENV=development
+      - VITE_API_URL=http://back:8080
+    restart: always
+    depends_on:
+      - back
+    networks:
+      - app
+  back:
+    container_name: test_spring
+    working_dir: /app
+    image: eclipse-temurin:17-jdk-alpine
+    volumes:
+      - ./app.jar:/app/app.jar
+    command: ["java", "-jar", "/app/app.jar"]
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/test
+      SPRING_DATASOURCE_USERNAME: app
+      SPRING_DATASOURCE_PASSWORD: adm@123
+      SPRING_PROFILES_ACTIVE: local
+      SPRINGDOC_API_DOCS_PATH: /v3/api-docs
+      SPRINGDOC_SWAGGER_UI_PATH: /swagger-ui.html
+    networks:
+      - app
+  db:
+    container_name: test_postgres
+    image: postgres:16.6
+    restart: always
+    shm_size: 128mb
+    environment:
+      POSTGRES_PASSWORD: v3rySstr0ngPwd
+    ports:
+      - "5435:5432"
+    volumes:
+      - db:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - app
+volumes:
+  db:
+networks:
+  app:
